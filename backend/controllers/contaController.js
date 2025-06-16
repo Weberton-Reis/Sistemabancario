@@ -54,11 +54,12 @@ const criarConta = async (req, res) => {
       data: conta
     });
   } catch (error) {
+    // Tratamento de erro de duplicidade (simulado)
     if (error.code === 11000) {
       const field = Object.keys(error.keyValue)[0];
       return res.status(400).json({
         success: false,
-        message: `${field} já existe no sistema`
+        message: `O campo '${field}' com valor '${error.keyValue[field]}' já existe.`
       });
     }
     
@@ -78,7 +79,7 @@ const atualizarConta = async (req, res) => {
       req.body,
       {
         new: true,
-        runValidators: true
+        runValidators: true // No modo simulado, isso não tem efeito, mas mantemos por consistência
       }
     );
 
@@ -95,11 +96,12 @@ const atualizarConta = async (req, res) => {
       data: conta
     });
   } catch (error) {
-    if (error.code === 11000) {
+    // Tratamento de erro de duplicidade (simulado)
+     if (error.code === 11000) {
       const field = Object.keys(error.keyValue)[0];
-      return res.status(400).json({
+       return res.status(400).json({
         success: false,
-        message: `${field} já existe no sistema`
+        message: `O campo '${field}' com valor '${error.keyValue[field]}' já existe.`
       });
     }
     
@@ -144,4 +146,3 @@ module.exports = {
   atualizarConta,
   excluirConta
 };
-

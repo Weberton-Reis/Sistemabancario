@@ -1,4 +1,3 @@
-// Simulação de banco de dados em memória para desenvolvimento
 let contasDB = [
   {
     _id: '507f1f77bcf86cd799439011',
@@ -60,12 +59,12 @@ const ContaSimulada = {
   find: () => ({
     sort: () => Promise.resolve(contasDB)
   }),
-  
+
   findById: (id) => {
     const conta = contasDB.find(c => c._id === id);
     return Promise.resolve(conta || null);
   },
-  
+
   create: (dados) => {
     const novaConta = {
       _id: `507f1f77bcf86cd79943901${nextId}`,
@@ -78,11 +77,11 @@ const ContaSimulada = {
     contasDB.push(novaConta);
     return Promise.resolve(novaConta);
   },
-  
+
   findByIdAndUpdate: (id, dados, options) => {
     const index = contasDB.findIndex(c => c._id === id);
     if (index === -1) return Promise.resolve(null);
-    
+
     contasDB[index] = {
       ...contasDB[index],
       ...dados,
@@ -90,18 +89,17 @@ const ContaSimulada = {
     };
     return Promise.resolve(contasDB[index]);
   },
-  
+
   findByIdAndDelete: (id) => {
     const index = contasDB.findIndex(c => c._id === id);
     if (index === -1) return Promise.resolve(null);
-    
+
     const contaRemovida = contasDB[index];
     contasDB.splice(index, 1);
     return Promise.resolve(contaRemovida);
   },
-  
+
   countDocuments: () => Promise.resolve(contasDB.length)
 };
 
 module.exports = ContaSimulada;
-

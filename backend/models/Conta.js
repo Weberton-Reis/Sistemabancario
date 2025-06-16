@@ -4,36 +4,36 @@ const contaSchema = new mongoose.Schema({
   // Informações textuais
   numeroConta: {
     type: String,
-    required: true,
     unique: true,
     trim: true
   },
   nomeCliente: {
     type: String,
-    required: true,
+    required: [true, 'O nome do cliente é obrigatório.'],
     trim: true
   },
   cpf: {
     type: String,
-    required: true,
+    required: [true, 'O CPF é obrigatório.'],
     unique: true,
     trim: true
   },
   email: {
     type: String,
-    required: true,
+    required: [true, 'O email é obrigatório.'],
     unique: true,
     trim: true,
-    lowercase: true
+    lowercase: true,
+    match: [/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/, 'Por favor, insira um email válido.']
   },
   telefone: {
     type: String,
-    required: true,
+    required: [true, 'O telefone é obrigatório.'],
     trim: true
   },
   endereco: {
     type: String,
-    required: true,
+    required: [true, 'O endereço é obrigatório.'],
     trim: true
   },
   tipoConta: {
@@ -46,7 +46,7 @@ const contaSchema = new mongoose.Schema({
     type: Number,
     required: true,
     default: 0,
-    min: 0
+    min: [0, 'O saldo não pode ser negativo.']
   },
   status: {
     type: String,
@@ -68,17 +68,21 @@ const contaSchema = new mongoose.Schema({
     default: 'https://via.placeholder.com/400x250?text=Documento+Identidade'
   }
 }, {
-  timestamps: true
+  timestamps: true // Cria os campos createdAt e updatedAt automaticamente
 });
 
-// Middleware para gerar número da conta automaticamente
+// Middleware para gerar número da conta automaticamente ANTES de salvar
 contaSchema.pre('save', async function(next) {
-  if (!this.numeroConta) {
-    const count = await mongoose.model('Conta').countDocuments();
-    this.numeroConta = String(100000 + count + 1).padStart(8, '0');
+  // Executa apenas se for um documento novo e o numeroConta não foi fornecido
+  if (this.isNew && !this.numeroConta) {
+    const ultimoDocumento = await mongoose.model('Conta', contaSchema).findOne().sort({ createdAt: -1 });
+    let proximoNumero = 100001;
+    if (ultimoDocumento && ultimoDocumento.numeroConta) {
+        proximoNumero = parseInt(ultimoDocumento.numeroConta, 10) + 1;
+    }
+    this.numeroConta = String(proximoNumero).padStart(8, '0');
   }
   next();
 });
 
 module.exports = mongoose.model('Conta', contaSchema);
-

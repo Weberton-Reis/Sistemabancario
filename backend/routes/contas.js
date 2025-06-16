@@ -9,11 +9,13 @@ const {
 } = require('../controllers/contaController');
 
 // Rotas CRUD para contas
-router.get('/', listarContas);           // GET /api/contas
-router.get('/:id', buscarContaPorId);    // GET /api/contas/:id
-router.post('/', criarConta);            // POST /api/contas
-router.put('/:id', atualizarConta);      // PUT /api/contas/:id
-router.delete('/:id', excluirConta);     // DELETE /api/contas/:id
+router.route('/')
+  .get(listarContas)
+  .post(criarConta);
+
+router.route('/:id')
+  .get(buscarContaPorId)
+  .put(atualizarConta)
+  .delete(excluirConta);
 
 module.exports = router;
-

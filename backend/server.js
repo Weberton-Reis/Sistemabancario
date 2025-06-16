@@ -3,14 +3,15 @@ const express = require('express');
 const cors = require('cors');
 const connectDB = require('./config/database');
 
-// Conexão com o banco de dados
+// Conectar ao banco de dados
+// --- AJUSTE FEITO: Agora a conexão é real e acontece aqui ---
 connectDB();
 
 const app = express();
 
 // Middlewares
 app.use(cors({
-  origin: '*',
+  origin: '*', // Em produção, restrinja para o domínio do seu frontend
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
@@ -52,7 +53,5 @@ app.use('*', (req, res) => {
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Servidor rodando na porta ${PORT}`);
-  console.log(`Ambiente: ${process.env.NODE_ENV}`);
+  console.log(`Servidor rodando no ambiente '${process.env.NODE_ENV}' na porta ${PORT}`);
 });
-
