@@ -1,4 +1,4 @@
-const Conta = require('../models/ContaSimulada');
+const Conta = require('../models/Conta');
 
 // GET - Listar todas as contas
 const listarContas = async (req, res) => {

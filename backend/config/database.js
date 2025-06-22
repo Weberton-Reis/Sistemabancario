@@ -1,12 +1,11 @@
-// arquivo: backend/config/database.js
 const mongoose = require('mongoose');
 
 const connectDB = async () => {
   try {
-    // Para desenvolvimento, vamos usar um banco em memória simulado
-    console.log('Usando banco de dados em memória (simulado)');
+    const conn = await mongoose.connect(process.env.MONGODB_URI);
+    console.log(`MongoDB Conectado com sucesso: ${conn.connection.host}`);
   } catch (error) {
-    console.error('Erro na configuração do banco de dados simulado:', error.message);
+    console.error(`Erro ao conectar com MongoDB: ${error.message}`);
     process.exit(1);
   }
 };
